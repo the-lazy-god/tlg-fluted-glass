@@ -8,8 +8,6 @@ vUv = uv;
 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`;
 
-
-  /* latest */
   var fragment = `
 precision mediump float;
 uniform sampler2D uTexture;
