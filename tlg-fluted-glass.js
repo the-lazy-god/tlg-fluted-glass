@@ -147,15 +147,15 @@ void main() {
 
     addObjects() {
       // Get all child image textures
-      const imageElements = this.container.querySelectorAll("[tlg-fluted-image]");
+      const imageElements = this.container.querySelectorAll("[tlg-fluted-glass-image]");
       const randomImageElement = imageElements[Math.floor(Math.random() * imageElements.length)];
 
       // Set rotation angle
-      const rotationAttribute = this.container.getAttribute("tlg-fluted-rotation");
+      const rotationAttribute = this.container.getAttribute("tlg-fluted-glass-rotation");
       this.rotationAngle = parseFloat(rotationAttribute, 10) || 0; // Default to 0
 
       // Set number of segments
-      const segmentsAttribute = this.container.getAttribute("tlg-fluted-segments");
+      const segmentsAttribute = this.container.getAttribute("tlg-fluted-glass-segments");
       this.segments = parseInt(segmentsAttribute, 10) || 50; // Default to 50
 
       // Create a new Image object to load the texture
@@ -228,7 +228,6 @@ void main() {
       this.resize();
     }
 
-
     render(time = 0) {
       if (!this.isPlaying) return;
 
@@ -237,13 +236,13 @@ void main() {
     }
   }
   // Create each canvas
-  document.querySelectorAll("[tlg-fluted-canvas]").forEach((element) => {
-    if (element.querySelector("[tlg-fluted-image]")) {
+  document.querySelectorAll("[tlg-fluted-glass-canvas]").forEach((element) => {
+    if (element.querySelector("[tlg-fluted-glass-image]")) {
       new Sketch({
         dom: element
       });
     } else {
-      console.error("No [tlg-fluted-image] child found within [tlg-fluted-canvas] element.");
+      console.error("No [tlg-fluted-glass-image] child found within [tlg-fluted-glass-canvas] element.");
     }
   });
 });
