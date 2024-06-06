@@ -25,51 +25,51 @@ Add the attribute below to any div element you want to contain a fluted glass ef
 
 **Attribute:**
 
--   Name: `tlg-fluted-canvas`
+-   Name: `tlg-fluted-glass-canvas`
 
 ### 2: Define image source element(s)
 
-Within each canvas container, include one or more image elements with the attribute `tlg-fluted-image`. One of these images will be used as the base texture in the fluted glass effect. If more than one image element is used, a random will be chosen on page load.
+Within each canvas container, include one or more image elements with the attribute `tlg-fluted-glass-image`. One of these images will be used as the base texture in the fluted glass effect. If more than one image element is used, a random will be chosen on page load.
 
 **Note:** Hide the source images with `display:none;`.
 
 **Attribute:**
 
--   Name: `tlg-fluted-image`
+-   Name: `tlg-fluted-glass-image`
 
 ## 🔄 Optional Customization
 
 ### Set the number of segments
 
-Control the number of segments in the fluted glass by adding the `tlg-fluted-segments` attribute to the container with attribute `tlg-fluted-canvas`. 
+Control the number of segments in the fluted glass by adding the `tlg-fluted-glass-segments` attribute to the container with attribute `tlg-fluted-glass-canvas`. 
 
 Default is 50 segments.
 
 **Attribute (Optional):**
 
--   Name: `tlg-fluted-segments`
+-   Name: `tlg-fluted-glass-segments`
 -   Value: `{number}` (Default = 50)
 
 ### Set texture rotation
 
-Control the rotation of the fluted glass segments by adding the `tlg-fluted-rotation` attribute to the container with attribute `tlg-fluted-canvas`. 
+Control the rotation of the fluted glass segments by adding the `tlg-fluted-glass-rotation` attribute to the container with attribute `tlg-fluted-glass-canvas`. 
 
 Enter the number of degrees you want to rotate the segments counter clockwise. Default is 0. Using 180 will effectively swap the direction of the motion.
 
 **Attribute (Optional):**
 
--   Name: `tlg-fluted-rotation`
+-   Name: `tlg-fluted-glass-rotation`
 -   Value: `{number}` (Degrees counter clockwise rotation. Default = 0)
 
 
 ## 📦 Attributes overview
 
-| Name                   | Description                                                                               | Values                              | Default          |
-|------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|------------------|
-| `tlg-fluted-canvas`    | Identifies the container element for the fluted glass canvas. **Required**                | None                                | -                |
-| `tlg-fluted-image`     | Marks an image to be used as base texture in the fluted glass effect. **Required**        | None                                | -                |
-| `tlg-fluted-segments`  | Determines the number of segments in the fluted glass pattern.                            | {Number}                            | 50               |
-| `tlg-fluted-mode`      | Sets the animation mode of the fluted glass effect.                                       | "static", "mouse", "scroll"         | "static"         |
-| `tlg-fluted-rotation`  | Rotates the fluted glass segments in degrees counter clockwise.                           | {Number}                            | 1                |
-| `tlg-fluted-motion`    | Controls the intensity of the motion effect.                                              | {Number}                            | 1                |
+| Name                         | Description                                                                               | Values                              | Default          |
+|------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|------------------|
+| `tlg-fluted-glass-canvas`    | Identifies the container element for the fluted glass canvas. **Required**                | None                                | -                |
+| `tlg-fluted-glass-image`     | Marks an image to be used as base texture in the fluted glass effect. **Required**        | None                                | -                |
+| `tlg-fluted-glass-segments`  | Determines the number of segments in the fluted glass pattern.                            | {Number}                            | 50               |
+| `tlg-fluted-glass-mode`      | Sets the animation mode of the fluted glass effect.                                       | "static", "mouse", "scroll"         | "static"         |
+| `tlg-fluted-glass-rotation`  | Rotates the fluted glass segments in degrees counter clockwise.                           | {Number}                            | 1                |
+| `tlg-fluted-glass-motion`    | Controls the intensity of the motion effect.                                              | {Number}                            | 1                |
 
