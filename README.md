@@ -1,17 +1,17 @@
 # TLG Fluted Glass
 Create a fluted glass texture effect on any image on you web page. Powered by the Three.js library. This script creates a Three.js canvas using an image for base texture, and simulates a fluted glass effect while providing options to customize the number of segments and motion.
-
+<!-- 
 Click below to see the setup guide video:
-
 [<img src="https://img.youtube.com/vi/youtubeID/maxresdefault.jpg" width="100%">](https://youtu.be/youtubeID)
+-->
 
 ## 🔗 Snippet
 
-Copy the `<script>` below and paste it in the `<head>` or before `</body>` tag in your project on the pages where you need it.
+Copy the `<script>` below and paste it in the `<head>` tag in your project on the pages where you need it.
 
 ```html
 <!-- Snippets by The Lazy God • Fluted Glass -->
-<script defer type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.162.0/build/three.module.js"} } </script>
+<script defer type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.min.js"} } </script>
 <script defer type="module" src="https://cdn.jsdelivr.net/gh/the-lazy-god/tlg-fluted-glass@v1.0.0/tlg-fluted-glass.min.js"></script>
 ``` 
 
