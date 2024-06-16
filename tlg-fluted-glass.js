@@ -16,7 +16,7 @@ varying vec2 vUv;
 uniform float uImageAspect;
 uniform vec3 uOverlayColor;
 uniform vec3 uOverlayColorWhite;
-uniform vec2 uMouse;
+uniform float uMotionValue;
 uniform float uRotation;
 uniform float uSegments;
 
@@ -42,10 +42,10 @@ void main() {
     float sinRot = sin(rotationRadians);
     vec2 center = vec2(0.5, 0.5);
 
-    // Apply rotation to mouse movement
-    vec2 mouseEffect = vec2((uMouse.x - 0.5) * 0.5 * -1.0, 0.0); // Original mouse effect vector, before rotation
-    mouseEffect = vec2(cosRot * mouseEffect.x - sinRot * mouseEffect.y,
-                       sinRot * mouseEffect.x + cosRot * mouseEffect.y); // Rotated mouse effect vector
+    // Apply rotation to motion value
+    vec2 motionEffect = vec2((uMotionValue - 0.5) * 0.5 * -1.0, 0.0); // Original motion effect vector, before rotation
+    motionEffect = vec2(cosRot * motionEffect.x - sinRot * motionEffect.y,
+                       sinRot * motionEffect.x + cosRot * motionEffect.y); // Rotated motion effect vector
 
     vec2 uvRotated = vec2(cosRot * (scaledUV.x - center.x) + sinRot * (scaledUV.y - center.y) + center.x,
                          -sinRot * (scaledUV.x - center.x) + cosRot * (scaledUV.y - center.y) + center.y);
@@ -57,11 +57,9 @@ void main() {
     float amplitude = 0.015; // The amplitude of the sine wave
     float sineWaveWarp = amplitude * sin(sliceProgress * 3.14159265 * 2.0);
 
-    // Adjust UVs based on sine wave and mouse interaction, respecting rotation
-    scaledUV.x += sineWaveWarp * (1.0 - 0.5 * abs(sliceProgress - 0.5)) + mouseEffect.x;
-    scaledUV.y += mouseEffect.y; // Only affects if mouseEffect.y is used
-
-    // Black overlay and white overlay logic remains the same...
+    // Adjust UVs based on sine wave and motion interaction, respecting rotation
+    scaledUV.x += sineWaveWarp * (1.0 - 0.5 * abs(sliceProgress - 0.5)) + motionEffect.x;
+    scaledUV.y += motionEffect.y; // Only affects if motionEffect.y is used
 
     // Tile texture on edges
     vec2 tileIndex = floor(scaledUV);
@@ -69,7 +67,7 @@ void main() {
     vec2 mirroredUV = mix(fract(scaledUV), 1.0 - fract(scaledUV), oddTile);
     vec4 color = texture2D(uTexture, mirroredUV);
 
-    // Apply overlays as before...
+    // Apply overlays
     float blackOverlayAlpha = 0.05 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.5 + 1.57)));
     color.rgb *= (1.0 - blackOverlayAlpha);
 
@@ -94,6 +92,11 @@ void main() {
       this.renderer.setSize(this.width, this.height);
       this.renderer.setClearColor(0xeeeeee, 1);
 
+      const modeAttr = this.container.getAttribute('tlg-fluted-glass-mode');
+      this.mode = ['static', 'mouse', 'scroll'].includes(modeAttr) ? modeAttr : 'static';
+      const motionAttr = this.container.getAttribute('tlg-fluted-glass-motion');
+      this.motionFactor = parseFloat(motionAttr) || 1;
+
       this.container.appendChild(this.renderer.domElement);
 
       var frustumSize = 1;
@@ -107,23 +110,52 @@ void main() {
       );
       this.camera.position.set(0, 0, 2);
 
-      /* Mouse interactiom*/
-      this.container.addEventListener('mousemove', (event) => {
-        this.onMouseMove(event);
-      });
-
       this.isPlaying = true;
       this.addObjects();
       this.resize();
       this.render();
       this.setupResize();
+
+      if (this.mode === 'mouse') {
+        this.mouseEvents();
+      }
+      if (this.mode === 'scroll') {
+        this.setupScroll();
+      }
+    }
+
+    mouseEvents() {
+      this.container.addEventListener('mousemove', (event) => {
+        this.onMouseMove(event);
+      });
+    }
+
+    setupScroll() {
+      window.addEventListener('scroll', this.handleScroll.bind(this));
+    }
+
+    handleScroll() {
+      const rect = this.container.getBoundingClientRect();
+      const elemTop = rect.top;
+      const elemBottom = rect.bottom;
+
+      // Check if the element is in the viewport
+      const isInViewport = elemTop < window.innerHeight && elemBottom >= 0;
+
+      if (isInViewport) {
+        const totalHeight = window.innerHeight + this.container.offsetHeight;
+        const scrolled = window.innerHeight - elemTop;
+        const progress = scrolled / totalHeight;
+        const maxMovement = 0.2; // Full rotation
+        this.material.uniforms.uMotionValue.value = 0.5 + progress * maxMovement * this.motionFactor;
+      }
     }
 
     onMouseMove(event) {
       this.mouse.x = event.clientX / window.innerWidth;
       this.mouse.y = 1.0 - event.clientY / window.innerHeight;
       if (this.material) {
-        this.material.uniforms.uMouse.value = this.mouse;
+        this.material.uniforms.uMotionValue.value = 0.5 + this.mouse.x * this.motionFactor * 0.1;
       }
     }
 
@@ -156,7 +188,7 @@ void main() {
 
       // Set number of segments
       const segmentsAttribute = this.container.getAttribute("tlg-fluted-segments");
-      this.segments = parseInt(segmentsAttribute, 10) || 50; // Default to 50
+      this.segments = parseInt(segmentsAttribute, 10) || 80; // Default to 80
 
       // Create a new Image object to load the texture
       const image = new Image();
@@ -198,8 +230,8 @@ void main() {
           uTexture: {
             value: texture
           },
-          uMouse: {
-            value: this.mouse
+          uMotionValue: {
+            value: 0.5
           },
           uRotation: {
             value: this.rotationAngle
@@ -226,8 +258,8 @@ void main() {
       this.scene.add(this.plane);
 
       this.resize();
+      this.handleScroll();
     }
-
 
     render(time = 0) {
       if (!this.isPlaying) return;
@@ -236,6 +268,7 @@ void main() {
       this.renderer.render(this.scene, this.camera);
     }
   }
+
   // Create each canvas
   document.querySelectorAll("[tlg-fluted-canvas]").forEach((element) => {
     if (element.querySelector("[tlg-fluted-image]")) {
