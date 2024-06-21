@@ -179,7 +179,7 @@ void main() {
 
     addObjects() {
       // Get all child image textures
-      const imageElements = this.container.querySelectorAll("[tlg-fluted-image]");
+      const imageElements = this.container.querySelectorAll("[tlg-fluted-glass-image]");
       const randomImageElement = imageElements[Math.floor(Math.random() * imageElements.length)];
 
       // Set rotation angle
@@ -270,13 +270,13 @@ void main() {
   }
 
   // Create each canvas
-  document.querySelectorAll("[tlg-fluted-canvas]").forEach((element) => {
-    if (element.querySelector("[tlg-fluted-image]")) {
+  document.querySelectorAll("[tlg-fluted-glass-canvas]").forEach((element) => {
+    if (element.querySelector("[tlg-fluted-glass-image]")) {
       new Sketch({
         dom: element
       });
     } else {
-      console.error("No [tlg-fluted-image] child found within [tlg-fluted-canvas] element.");
+      console.error("No [tlg-fluted-glass-image] child found within [tlg-fluted-glass-canvas] element.");
     }
   });
 });
