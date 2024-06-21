@@ -147,7 +147,9 @@ void main() {
         const scrolled = window.innerHeight - elemTop;
         const progress = scrolled / totalHeight;
         const maxMovement = 0.2; // Full rotation
-        this.material.uniforms.uMotionValue.value = 0.5 + progress * maxMovement * this.motionFactor;
+        if (this.material) {
+          this.material.uniforms.uMotionValue.value = 0.5 + progress * maxMovement * this.motionFactor;
+        }
       }
     }
 
