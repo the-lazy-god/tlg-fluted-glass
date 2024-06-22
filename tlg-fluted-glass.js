@@ -185,11 +185,11 @@ void main() {
       const randomImageElement = imageElements[Math.floor(Math.random() * imageElements.length)];
 
       // Set rotation angle
-      const rotationAttribute = this.container.getAttribute("tlg-fluted-rotation");
+      const rotationAttribute = this.container.getAttribute("tlg-fluted-glass-rotation");
       this.rotationAngle = parseFloat(rotationAttribute, 10) || 0; // Default to 0
 
       // Set number of segments
-      const segmentsAttribute = this.container.getAttribute("tlg-fluted-segments");
+      const segmentsAttribute = this.container.getAttribute("tlg-fluted-glass-segments");
       this.segments = parseInt(segmentsAttribute, 10) || 80; // Default to 80
 
       // Create a new Image object to load the texture
