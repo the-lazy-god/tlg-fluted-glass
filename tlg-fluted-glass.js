@@ -157,10 +157,15 @@ void main() {
     }
 
     onMouseMove(event) {
-      this.mouse.x = event.clientX / window.innerWidth;
-      this.mouse.y = 1.0 - event.clientY / window.innerHeight;
+      const cornerX = 0;
+      const cornerY = 0;
+      const distanceX = (event.clientX - cornerX) / this.container.offsetWidth;
+      const distanceY = (event.clientY - cornerY) / this.container.offsetHeight;
+      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+      const maxDistance = Math.sqrt(2);
+      const offsetDistance = distance - (maxDistance / 2);
       if (this.material) {
-        this.material.uniforms.uMotionValue.value = 0.5 + this.mouse.x * this.motionFactor * 0.1;
+        this.material.uniforms.uMotionValue.value = 0.5 + offsetDistance * this.motionFactor * 0.1;
       }
     }
 
@@ -178,7 +183,6 @@ void main() {
         this.material.uniforms.resolution.value.x = this.width;
         this.material.uniforms.resolution.value.y = this.height;
       }
-
       this.camera.updateProjectionMatrix();
     }
 
