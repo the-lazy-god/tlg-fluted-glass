@@ -83,7 +83,10 @@ void main() {
       this.scene = new THREE.Scene();
 
       this.container = options.dom;
-      this.container.style.position = 'relative';
+      const position = getComputedStyle(this.container).position;
+      if (position !== 'relative' && position !== 'absolute' && position !== 'fixed' && position !== 'sticky') {
+        this.container.style.position = 'relative';
+      }
 
       this.width = this.container.offsetWidth;
       this.height = this.container.offsetHeight;
