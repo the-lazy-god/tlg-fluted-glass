@@ -21,7 +21,7 @@ Copy the `<script>` below and paste it in the `<head>` tag in your project on th
 
 Add the attribute below to any div element you want to contain a fluted glass effect.
 
-**Note:** This element is automatically set to `position:relative;`. Give it the size you want the canvas to be using height and width or width and aspect ratio. The canvas will fill this div.
+**Note:** This element is automatically set to `position:relative;` if it doesn't already have a position type which works as relative. Give it the size you want the canvas to be using height and width or width and aspect ratio. The canvas will fill this div.
 
 **Attribute:**
 
