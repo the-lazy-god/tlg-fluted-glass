@@ -54,7 +54,7 @@ Set the interaction mode of the fluted glass effect by adding the `tlg-fluted-gl
 
 ### ⏩ Set level of motion
 
-Control the intensity of the motion effect with `tlg-fluted-glass-motion` attribute to the container with attribute `tlg-fluted-glass-canvas`. 
+Control the intensity of the motion effect by adding the `tlg-fluted-glass-motion` attribute to the canvas container with attribute `tlg-fluted-glass-canvas`. 
 
 Default is 1. Larger number will increase motion intensity. Negative number will flip the direction.
 
@@ -67,7 +67,7 @@ Default is 1. Larger number will increase motion intensity. Negative number will
 
 ### 🔢 Set the number of segments
 
-Control the number of segments in the fluted glass by adding the `tlg-fluted-glass-segments` attribute to the container with attribute `tlg-fluted-glass-canvas`. 
+Control the number of segments in the fluted glass by adding the `tlg-fluted-glass-segments` attribute to the canvas container with attribute `tlg-fluted-glass-canvas`. 
 
 Default is 80 segments.
 
@@ -80,9 +80,9 @@ Default is 80 segments.
 
 ### 🔄 Set texture rotation
 
-Control the rotation of the fluted glass segments by adding the `tlg-fluted-glass-rotation` attribute to the container with attribute `tlg-fluted-glass-canvas`. 
+Control the rotation of the fluted glass segments by adding the `tlg-fluted-glass-rotation` attribute to the canvas container with attribute `tlg-fluted-glass-canvas`. 
 
-Enter the number of degrees you want to rotate the segments counter clockwise. Default is 0. Using 180 will effectively swap the direction of the motion.
+Enter the number of degrees you want to rotate the segments counter clockwise. Default is 0.
 
 **Attribute (Optional):**
 
