@@ -42,24 +42,19 @@ void main() {
     float sinRot = sin(rotationRadians);
     vec2 center = vec2(0.5, 0.5);
 
-    // Apply rotation to motion value
-    vec2 motionEffect = vec2((uMotionValue - 0.5) * 0.5 * -1.0, 0.0); // Original motion effect vector, before rotation
-    motionEffect = vec2(cosRot * motionEffect.x - sinRot * motionEffect.y,
-                       sinRot * motionEffect.x + cosRot * motionEffect.y); // Rotated motion effect vector
-
+    // Apply rotation to scaledUV
     vec2 uvRotated = vec2(cosRot * (scaledUV.x - center.x) + sinRot * (scaledUV.y - center.y) + center.x,
                          -sinRot * (scaledUV.x - center.x) + cosRot * (scaledUV.y - center.y) + center.y);
 
     // Calculate the progress within the current slice
-    float sliceProgress = fract(uvRotated.x * numSlices);
+    float sliceProgress = fract(uvRotated.x * numSlices + uMotionValue);
 
     // Apply sine wave distortion for the 3D cylindrical effect
     float amplitude = 0.015; // The amplitude of the sine wave
     float sineWaveWarp = amplitude * sin(sliceProgress * 3.14159265 * 2.0);
 
-    // Adjust UVs based on sine wave and motion interaction, respecting rotation
-    scaledUV.x += sineWaveWarp * (1.0 - 0.5 * abs(sliceProgress - 0.5)) + motionEffect.x;
-    scaledUV.y += motionEffect.y; // Only affects if motionEffect.y is used
+    // Adjust UVs based on sine wave, respecting rotation
+    scaledUV.x += sineWaveWarp * (1.0 - 0.5 * abs(sliceProgress - 0.5));
 
     // Tile texture on edges
     vec2 tileIndex = floor(scaledUV);
@@ -98,7 +93,7 @@ void main() {
       const modeAttr = this.container.getAttribute('tlg-fluted-glass-mode');
       this.mode = ['static', 'mouse', 'scroll'].includes(modeAttr) ? modeAttr : 'static';
       const motionAttr = this.container.getAttribute('tlg-fluted-glass-motion');
-      this.motionFactor = parseFloat(motionAttr) || 1;
+      this.motionFactor = 50 * parseFloat(motionAttr) || 50;
 
       this.container.appendChild(this.renderer.domElement);
 
@@ -151,21 +146,16 @@ void main() {
         const progress = scrolled / totalHeight;
         const maxMovement = 0.2; // Full rotation
         if (this.material) {
-          this.material.uniforms.uMotionValue.value = 0.5 + progress * maxMovement * this.motionFactor;
+          this.material.uniforms.uMotionValue.value = progress * maxMovement * this.motionFactor;
         }
       }
     }
 
     onMouseMove(event) {
-      const cornerX = 0;
-      const cornerY = 0;
-      const distanceX = (event.clientX - cornerX) / this.container.offsetWidth;
-      const distanceY = (event.clientY - cornerY) / this.container.offsetHeight;
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-      const maxDistance = Math.sqrt(2);
-      const offsetDistance = distance - (maxDistance / 2);
+      this.mouse.x = event.clientX / window.innerWidth;
+      this.mouse.y = 1.0 - event.clientY / window.innerHeight;
       if (this.material) {
-        this.material.uniforms.uMotionValue.value = 0.5 + offsetDistance * this.motionFactor * 0.1;
+        this.material.uniforms.uMotionValue.value = 0.5 + this.mouse.x * this.motionFactor * 0.1;
       }
     }
 
