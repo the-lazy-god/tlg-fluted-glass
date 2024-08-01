@@ -93,7 +93,7 @@ void main() {
       const modeAttr = this.container.getAttribute('tlg-fluted-glass-mode');
       this.mode = ['static', 'mouse', 'scroll'].includes(modeAttr) ? modeAttr : 'static';
       const motionAttr = this.container.getAttribute('tlg-fluted-glass-motion');
-      this.motionFactor = 50 * parseFloat(motionAttr) || 50;
+      this.motionFactor = -50 * parseFloat(motionAttr) || -50;
 
       this.container.appendChild(this.renderer.domElement);
 
