@@ -19,11 +19,10 @@ uniform vec3 uOverlayColorWhite;
 uniform float uMotionValue;
 uniform float uRotation;
 uniform float uSegments;
+uniform bool uShowOverlays;
 
 void main() {
     float canvasAspect = resolution.x / resolution.y;
-
-    // Number of slices
     float numSlices = uSegments;
     float rotationRadians = uRotation * (3.14159265 / 180.0); // Convert rotation to radians
 
@@ -37,37 +36,37 @@ void main() {
         scaledUV.y = (vUv.y - 0.5) * scale + 0.5;
     }
 
-    // Rotation for the effect
-    float cosRot = cos(rotationRadians);
-    float sinRot = sin(rotationRadians);
-    vec2 center = vec2(0.5, 0.5);
+    // Rotate the texture to align it with the warping axis
+    vec2 rotatedUV = vec2(
+        cos(rotationRadians) * (scaledUV.x - 0.5) - sin(rotationRadians) * (scaledUV.y - 0.5) + 0.5,
+        sin(rotationRadians) * (scaledUV.x - 0.5) + cos(rotationRadians) * (scaledUV.y - 0.5) + 0.5
+    );
 
-    // Apply rotation to scaledUV
-    vec2 uvRotated = vec2(cosRot * (scaledUV.x - center.x) + sinRot * (scaledUV.y - center.y) + center.x,
-                         -sinRot * (scaledUV.x - center.x) + cosRot * (scaledUV.y - center.y) + center.y);
-
-    // Calculate the progress within the current slice
-    float sliceProgress = fract(uvRotated.x * numSlices + uMotionValue);
-
-    // Apply sine wave distortion for the 3D cylindrical effect
+    // Apply the warping effect along the aligned axis (now horizontal after rotation)
+    float sliceProgress = fract(rotatedUV.x * numSlices + uMotionValue);
     float amplitude = 0.015; // The amplitude of the sine wave
-    float sineWaveWarp = amplitude * sin(sliceProgress * 3.14159265 * 2.0);
+    rotatedUV.x += amplitude * sin(sliceProgress * 3.14159265 * 2.0) * (1.0 - 0.5 * abs(sliceProgress - 0.5));
 
-    // Adjust UVs based on sine wave, respecting rotation
-    scaledUV.x += sineWaveWarp * (1.0 - 0.5 * abs(sliceProgress - 0.5));
+    // Rotate the UVs back to the original orientation
+    vec2 finalUV = vec2(
+        cos(-rotationRadians) * (rotatedUV.x - 0.5) - sin(-rotationRadians) * (rotatedUV.y - 0.5) + 0.5,
+        sin(-rotationRadians) * (rotatedUV.x - 0.5) + cos(-rotationRadians) * (rotatedUV.y - 0.5) + 0.5
+    );
 
-    // Tile texture on edges
-    vec2 tileIndex = floor(scaledUV);
+    // Tile texture on edges using the final UVs
+    vec2 tileIndex = floor(finalUV);
     vec2 oddTile = mod(tileIndex, 2.0);
-    vec2 mirroredUV = mix(fract(scaledUV), 1.0 - fract(scaledUV), oddTile);
+    vec2 mirroredUV = mix(fract(finalUV), 1.0 - fract(finalUV), oddTile);
     vec4 color = texture2D(uTexture, mirroredUV);
 
-    // Apply overlays
-    float blackOverlayAlpha = 0.05 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.5 + 1.57)));
-    color.rgb *= (1.0 - blackOverlayAlpha);
+    if (uShowOverlays) {
+        // Apply overlays if the option is enabled
+        float blackOverlayAlpha = 0.05 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.5 + 1.57)));
+        color.rgb *= (1.0 - blackOverlayAlpha);
 
-    float whiteOverlayAlpha = 0.15 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.7 - 0.7)));
-    color.rgb = mix(color.rgb, uOverlayColorWhite, whiteOverlayAlpha);
+        float whiteOverlayAlpha = 0.15 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.7 - 0.7)));
+        color.rgb = mix(color.rgb, uOverlayColorWhite, whiteOverlayAlpha);
+    }
 
     gl_FragColor = color;
 }
@@ -189,6 +188,10 @@ void main() {
       const segmentsAttribute = this.container.getAttribute("tlg-fluted-glass-segments");
       this.segments = parseInt(segmentsAttribute, 10) || 80; // Default to 80
 
+      // Check if overlays should be shown
+      const overlaysAttr = this.container.getAttribute("tlg-fluted-glass-overlays");
+      this.showOverlays = overlaysAttr !== "false"; // Default is true unless explicitly set to "false"
+
       // Create a new Image object to load the texture
       const image = new Image();
       image.onload = () => {
@@ -246,6 +249,9 @@ void main() {
           },
           uImageAspect: {
             value: this.imageAspect
+          },
+          uShowOverlays: {
+            value: this.showOverlays
           }
         },
         vertexShader: vertex,
