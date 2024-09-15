@@ -91,7 +91,7 @@ Enter the number of degrees you want to rotate the segments counter clockwise. D
 
 ---
 
-### 🌊 Gradient overlay
+### 🌊 Show gradient overlay
 
 Show a gradient overlay on each segment to give a more 3D feel to the effect by adding the `tlg-fluted-glass-overlay` attribute on the canvas container with attribute `tlg-fluted-glass-canvas`. 
 
