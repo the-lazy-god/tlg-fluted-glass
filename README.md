@@ -12,7 +12,7 @@ Copy the `<script>` below and paste it in the `<head>` tag in your project on th
 ```html
 <!-- Snippets by The Lazy God • Fluted Glass -->
 <script defer type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.min.js"} } </script>
-<script defer type="module" src="https://cdn.jsdelivr.net/gh/the-lazy-god/tlg-fluted-glass@v1.2.0/tlg-fluted-glass.min.js"></script>
+<script defer type="module" src="https://cdn.jsdelivr.net/gh/the-lazy-god/tlg-fluted-glass@v2.0.0/tlg-fluted-glass.min.js"></script>
 ``` 
 
 ## ✅ Required Setup
