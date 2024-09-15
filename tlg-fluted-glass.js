@@ -19,7 +19,7 @@ uniform vec3 uOverlayColorWhite;
 uniform float uMotionValue;
 uniform float uRotation;
 uniform float uSegments;
-uniform float uOverlayOpacity; // New uniform for overlay opacity
+uniform float uOverlayOpacity;
 
 void main() {
     float canvasAspect = resolution.x / resolution.y;
