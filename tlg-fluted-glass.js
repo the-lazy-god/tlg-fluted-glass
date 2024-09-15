@@ -19,7 +19,7 @@ uniform vec3 uOverlayColorWhite;
 uniform float uMotionValue;
 uniform float uRotation;
 uniform float uSegments;
-uniform bool uShowOverlays;
+uniform float uOverlayOpacity;
 
 void main() {
     float canvasAspect = resolution.x / resolution.y;
@@ -59,18 +59,19 @@ void main() {
     vec2 mirroredUV = mix(fract(finalUV), 1.0 - fract(finalUV), oddTile);
     vec4 color = texture2D(uTexture, mirroredUV);
 
-    if (uShowOverlays) {
-        // Apply overlays if the option is enabled
-        float blackOverlayAlpha = 0.05 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.5 + 1.57)));
+    if (uOverlayOpacity > 0.0) {
+        // Apply overlays with the specified opacity
+        float blackOverlayAlpha = 0.05 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.5 + 1.57))) * (uOverlayOpacity / 100.0);
         color.rgb *= (1.0 - blackOverlayAlpha);
 
-        float whiteOverlayAlpha = 0.15 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.7 - 0.7)));
+        float whiteOverlayAlpha = 0.15 * (1.0 - abs(sin(sliceProgress * 3.14159265 * 0.7 - 0.7))) * (uOverlayOpacity / 100.0);
         color.rgb = mix(color.rgb, uOverlayColorWhite, whiteOverlayAlpha);
     }
 
     gl_FragColor = color;
 }
 `;
+
 
   class Sketch {
     constructor(options) {
@@ -188,9 +189,9 @@ void main() {
       const segmentsAttribute = this.container.getAttribute("tlg-fluted-glass-segments");
       this.segments = parseInt(segmentsAttribute, 10) || 80; // Default to 80
 
-      // Check if overlays should be shown
-      const overlaysAttr = this.container.getAttribute("tlg-fluted-glass-overlays");
-      this.showOverlays = overlaysAttr !== "false"; // Default is true unless explicitly set to "false"
+      // Get overlay opacity value from attribute
+      const overlaysAttr = this.container.getAttribute("tlg-fluted-glass-overlay");
+      this.overlayOpacity = Math.max(0, Math.min(100, parseFloat(overlaysAttr, 10) || 0)); // Clamp between 0 and 100
 
       // Create a new Image object to load the texture
       const image = new Image();
@@ -204,13 +205,13 @@ void main() {
       image.src = randomImageElement.src;
     }
 
+
     setupMaterialAndGeometry(imageSrc) {
       const rendererElement = this.renderer.domElement;
       // Set styles for generated canvas
       rendererElement.style.position = 'absolute';
       rendererElement.style.top = '0';
       rendererElement.style.left = '0';
-      // rendererElement.style.zIndex = '-1';
 
       // Append the renderer element to the container
       this.container.appendChild(rendererElement);
@@ -250,8 +251,8 @@ void main() {
           uImageAspect: {
             value: this.imageAspect
           },
-          uShowOverlays: {
-            value: this.showOverlays
+          uOverlayOpacity: {
+            value: this.overlayOpacity
           }
         },
         vertexShader: vertex,
