@@ -91,16 +91,16 @@ Enter the number of degrees you want to rotate the segments counter clockwise. D
 
 ---
 
-### 🫥 Hide gradient overlay
+### 🌊 Gradient overlay
 
-Hide the gradient overlay effect on each segment by adding the `tlg-fluted-glass-overlays` attribute on the canvas container with attribute `tlg-fluted-glass-canvas`. 
+Show a gradient overlay on each segment to give a more 3D feel to the effect by adding the `tlg-fluted-glass-overlay` attribute on the canvas container with attribute `tlg-fluted-glass-canvas`. 
 
-The value should be `false` to hide the segments.
+The value should be a number from 0 - 100 and will be the opacity of the overlay. Default is 0.
 
 **Attribute (Optional):**
 
--   Name: `tlg-fluted-glass-overlays`
--   Value: `false`
+-   Name: `tlg-fluted-glass-overlay`
+-   Value: `{number}` (Between 0 - 100)
 
 ---
 
@@ -114,5 +114,5 @@ The value should be `false` to hide the segments.
 | `tlg-fluted-glass-mode`      | Sets the animation mode of the fluted glass effect.                                       | "static", "mouse", "scroll"         | "static"         |
 | `tlg-fluted-glass-rotation`  | Rotates the fluted glass segments in degrees counter clockwise.                           | {Number}                            | 1                |
 | `tlg-fluted-glass-motion`    | Controls the intensity of the motion effect.                                              | {Number}                            | 1                |
-| `tlg-fluted-glass-overlays`  | Used to hide the gradient overlay.                                                        | "false"                             | -                |
+| `tlg-fluted-glass-overlay`   | Used to show the gradient overlay.                                                        | {Number} Between 0 - 100            | -                |
 
